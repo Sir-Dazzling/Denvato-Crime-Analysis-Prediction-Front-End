@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Homepage from './pages/Homepage/Homepage';
 import Authpage from './pages/Authpage/Authpage';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 class App extends React.Component
 {
@@ -15,6 +16,7 @@ class App extends React.Component
         <Switch>
             <Route exact path= {["/", "/home"]} component = {Homepage} />
             <Route exact path = "/auth" component = {Authpage} />
+            <Route exact path = "/dashboard" component = {Dashboard} />
           </Switch>
       </div>
     );
