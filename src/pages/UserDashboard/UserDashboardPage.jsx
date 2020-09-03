@@ -1,128 +1,32 @@
-import React from 'react';
-import {Redirect} from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from "react";
 
-import {userService} from '../../redux/user/UserSelector';
-import {userActions} from '../../redux/user/UserActions';
+import DashboardNavbar from "../../components/dashboard/dashboard-navbar.component";
+import SideNavbar from "../../components/dashboard/sidenavbar.component";
+import DashboardFooter from "../../components/dashboard/dashboard-footer.component";
 
-class UserDashboardPage extends React.Component 
-{
-    constructor(props) 
-    {
-        super(props);
+const UserDashboard = () => {
+  return (
+    <>
+      <SideNavbar />
+      <div className="relative md:ml-64 bg-gray-200">
+        <DashboardNavbar />
+        {/* Header */}
+        <div className="relative bg-primary-mid md:pt-32 pb-32 pt-12">
+          <div className="px-4 md:px-10 mx-auto w-full">
+            <div className="flex flex-col">
+              <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
+                {/* This is where cards would come in i guess */}
+              </div>
+              <div className="w-full lg:w-6/12 xl:w-3/12 px-4">
+                {/* This is where cards would come in i guess */}
+              </div>
+            </div>
+          </div>
+        </div>
+        <DashboardFooter />
+      </div>
+    </>
+  );
+};
 
-        this.state = 
-        {
-            accessGranted: true
-        }
-    }
-
-    componentDidMount()
-    {
-        // Requesting for access to content manager page from  spring boot rest api server
-        userService.getUserDashboard().then(
-            response => 
-            {
-                if(response.ok)
-                {
-                    this.setState({
-                        accessGranted: true
-                    });
-                    console.log(response)
-                }
-                else
-                {
-                    this.setState({
-                        accessGranted: false
-                    });
-                }
-                
-                console.log("Access Granted "+response.ok);
-            }
-        )
-
-    }
-
-    // Function to verify account
-    verifyAccount()
-    {
-        const {user} = this.props;
-
-        console.log(user.email);
-
-        //dispatch(userActions.verifyAccount(user.email));
-    }
-
-
-    render() 
-    {
-        
-        const {accessGranted} = this.state;
-        const {user, dispatch, verifying} = this.props;
-
-        console.log(user);
-        console.log(accessGranted);
-
-        const verifyAccount = () => 
-        {
-            dispatch(userActions.verifyAccount(user.email));
-        };
-
-        if(accessGranted)
-        {
-            if(!user.enabled)
-            {
-                return (
-                    <div className="col-md-6 col-md-offset-3">
-                        {!user.message ? <p>Activate Your Account now </p> : null}
-                        <h3>{user.username}</h3>
-                        {user.message ? <h1>{user.message} <a to = "/verify-account">Click here to enter verfication token</a></h1> :
-                        <button  className="nav-link" onClick = {verifyAccount}>
-                            Send Verification Link to my Mail.
-                            {verifying ?
-                            <img alt = "Login/SignUp Avatar" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        : null}
-                        </button>}
-                 </div> 
-                );
-                
-            }
-            else
-            {
-                return (
-                    <div className="col-md-6 col-md-offset-3">
-                       This is the User Dashboard
-                        <h3>{user.username}</h3>
-                        <a href="/" className="nav-link" onClick={userActions.logout}>
-                            LogOut
-                        </a>
-                    </div>
-                );
-            }
-        }
-
-        else 
-        {
-            userActions.logout();
-            return(
-                <Redirect to = "/auth" />
-            );
-            
-        }
-             
-    }
-
-}
-
-function mapStateToProps(state) 
-{
-    const { verifying } = state.authentication;
-    const { authentication } = state;
-    const { user } = authentication;
-    return {
-        user,
-        verifying
-    };
-}
-
-export default connect(mapStateToProps)(UserDashboardPage);
+export default UserDashboard;

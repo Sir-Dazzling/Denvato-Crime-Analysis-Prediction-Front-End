@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 import './Homepage.style.scss';
 import homeImage1 from '../../images/cyberinvestigate.jpg';
@@ -51,7 +52,7 @@ const Homepage = () =>
 
                             <ul className="navbar-nav search-right">
                                 <li className="nav-item">
-                                    <a className="nav-link" href="auth">Login/Signup</a>
+                                    <Link className="nav-link" to="login">Login/Signup</Link>
                                 </li>
                             </ul>
                         </div>
